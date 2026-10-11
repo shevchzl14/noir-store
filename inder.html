@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOIR | Premium Store</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#090909;--card:#151515;--border:#292929;--white:#f5f5f5;--gray:#888;--red:#e53935}
+body{background:var(--bg);color:var(--white);font-family:Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+header{height:75px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;background:#090909;z-index:10}
+.logo{font-size:28px;font-weight:900;letter-spacing:6px;cursor:pointer}
+nav{display:flex;gap:25px}
+nav a,.back{color:#aaa;text-decoration:none;font-size:13px}
+nav a:hover,.back:hover{color:white}
+.actions{display:flex;gap:15px}
+.actions button{background:none;border:0;color:white;font-size:22px;position:relative}
+.count{font-size:10px;background:var(--red);border-radius:50%;padding:3px 5px;position:absolute;top:-7px;right:-9px}
+main{max-width:1450px;margin:auto;padding:25px 5%}
+.hero{min-height:350px;padding:55px;display:flex;align-items:center;background:linear-gradient(90deg,#080808 10%,#080808aa),url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1500&q=85') center/cover;border:1px solid var(--border);margin-bottom:45px}
+.hero h1{font-size:clamp(42px,6vw,70px);margin:20px 0}
+.hero p{color:#aaa;line-height:1.7;max-width:420px;margin-bottom:22px}
+.eyebrow{letter-spacing:4px;font-size:11px;color:#aaa}
+.white-btn,.red-btn{border:0;padding:15px 20px;font-weight:bold;font-size:12px;text-transform:uppercase;transition:.2s}
+.white-btn{background:white;color:black}
+.white-btn:hover{background:#ccc}
+.red-btn{background:var(--red);color:white}
+.red-btn:hover{background:#b92525}
+h2{font-size:27px;margin-bottom:10px}
+.muted{color:var(--gray);font-size:12px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:25px 0}
+.toolbar input,.toolbar select,.checkout-form input{background:#141414;color:white;border:1px solid #333;padding:12px}
+.toolbar input{flex:1;min-width:180px}
+.toolbar select{min-width:130px}
+.product-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.product{background:var(--card);border:1px solid var(--border);transition:.25s;overflow:hidden}
+.product:hover{transform:translateY(-4px);border-color:#555}
+.product-image{aspect-ratio:4/4.5;position:relative;overflow:hidden;background:#222}
+.product-image img{width:100%;height:100%;object-fit:cover;transition:.4s}
+.product:hover img{transform:scale(1.06)}
+.heart{position:absolute;right:12px;top:12px;border:1px solid #555;background:#111c;color:white;width:36px;height:36px;border-radius:50%;font-size:20px}
+.heart.active{color:var(--red)}
+.sale{position:absolute;left:12px;top:12px;background:white;color:black;padding:6px;font-size:10px}
+.product-info{padding:14px}
+.category{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:1px}
+.product h3{font-size:14px;margin:10px 0}
+.rating{font-size:11px;color:#ccc}
+.reviews{color:#777}
+.prices{display:flex;align-items:center;gap:9px;margin:15px 0}
+.price{font-weight:bold;font-size:17px}
+.old{font-size:12px;color:#777;text-decoration:line-through}
+.add{width:100%;border:0;background:#f5f5f5;color:#080808;padding:13px 5px;font-size:10px;font-weight:bold;text-transform:uppercase}
+.add:hover{background:#ccc}
+.empty{grid-column:1/-1;padding:60px 20px;text-align:center;color:#aaa;border:1px solid var(--border);line-height:2}
+.page{display:none}
+.page.active{display:block}
+.cart-layout{display:grid;grid-template-columns:1.7fr .8fr;gap:25px;align-items:start;margin:30px 0 60px}
+.cart-title{font-size:35px;margin-bottom:8px}
+.cart-subtitle{color:#888;font-size:13px;margin-bottom:25px}
+.cart-list{display:grid;gap:12px}
+.cart-item{display:grid;grid-template-columns:110px 1fr;gap:17px;padding:15px;background:var(--card);border:1px solid var(--border)}
+.cart-item img{width:110px;height:140px;object-fit:cover}
+.item-top{display:flex;justify-content:space-between;gap:10px}
+.item-top h3{font-size:15px;margin:4px 0 10px}
+.remove{background:none;border:0;color:#999;font-size:23px}
+.remove:hover{color:var(--red)}
+.quantity-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:20px}
+.quantity{display:flex;align-items:center;border:1px solid #393939}
+.quantity button{background:none;border:0;color:white;width:34px;height:32px}
+.quantity button:hover{background:#333}
+.quantity span{min-width:25px;text-align:center;font-size:13px}
+.line-total{font-size:13px;font-weight:bold}
+.summary{padding:25px;background:#121212;border:1px solid #333;position:sticky;top:95px}
+.summary h2{font-size:21px;margin-bottom:25px}
+.summary-line{display:flex;justify-content:space-between;gap:10px;color:#aaa;font-size:13px;margin:18px 0}
+.summary-line strong{color:white;text-align:right}
+.summary-line.discount strong{color:#ff6963}
+.total{border-top:1px solid #383838;padding-top:20px;margin-top:22px;display:flex;justify-content:space-between;font-weight:bold}
+.total strong{color:var(--red);font-size:21px}
+.summary .red-btn{width:100%;margin-top:25px}
+.back{display:inline-block;margin-top:20px;text-decoration:underline;text-underline-offset:4px}
+.checkout-form{display:grid;gap:12px;margin-top:20px}
+.checkout-form label{font-size:12px;color:#aaa}
+.checkout-form input{display:block;width:100%;margin-top:7px}
+.checkout-form .red-btn{width:100%}
+footer{border-top:1px solid var(--border);padding:30px 5%;display:flex;justify-content:space-between;gap:15px;color:#777;font-size:11px;margin-top:60px}
+.toast{position:fixed;bottom:25px;left:50%;transform:translate(-50%,20px);opacity:0;background:white;color:black;padding:14px 22px;z-index:30;transition:.25s;pointer-events:none;font-size:13px}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:950px){.product-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.cart-layout{grid-template-columns:1fr}.summary{position:static}}
+@media(max-width:620px){
+header{height:65px;padding:0 4%}.logo{font-size:22px;letter-spacing:4px}nav{display:none}.actions{gap:13px}
+main{padding:18px 4%}.hero{min-height:300px;padding:24px;background-position:60% center}.hero h1{font-size:43px}.hero p{font-size:12px}
+.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.product-info{padding:10px}.product h3{font-size:13px;min-height:30px}
+.prices{gap:6px;flex-wrap:wrap}.price{font-size:15px}.add{font-size:9px}
+.toolbar input{flex-basis:100%}.toolbar select{flex:1;min-width:0;font-size:11px;padding:10px 5px}
+.cart-title{font-size:29px}.cart-item{grid-template-columns:85px 1fr;gap:12px;padding:10px}
+.cart-item img{width:85px;height:115px}.item-top h3{font-size:13px}.quantity button{width:28px;height:30px}
+.summary{padding:19px}footer{padding:25px 4%}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo" onclick="showPage('shop')">NOIR</div>
+  <nav>
+    <a href="#" onclick="showPage('shop')">Каталог</a>
+    <a href="#catalog" onclick="categoryFilter('Одежда')">Одежда</a>
+    <a href="#catalog" onclick="categoryFilter('Аксессуары')">Аксессуары</a>
+  </nav>
+  <div class="actions">
+    <button onclick="showPage('shop');setTimeout(()=>document.getElementById('search').focus(),50)" title="Поиск">⌕</button>
+    <button onclick="toggleFavorites()" title="Избранное">♡<span class="count" id="favCount">0</span></button>
+    <button onclick="showPage('cart')" title="Корзина">♧<span class="count" id="cartCount">0</span></button>
+  </div>
+</header>
+
+<main>
+<section id="shopPage" class="page active">
+  <div class="hero">
+    <div>
+      <div class="eyebrow">LESS, BUT BETTER</div>
+      <h1>YOUR STYLE.<br>YOUR RULES.</h1>
+      <p>Минимализм, который говорит за тебя. Вещи для тех, кто выбирает качество и характер.</p>
+      <button class="white-btn" onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'})">Смотреть коллекцию ↗</button>
+    </div>
+  </div>
+
+  <section id="catalog">
+    <h2 id="catalogTitle">Новая коллекция</h2>
+    <p class="muted" id="resultCount">Подборка вещей NOIR</p>
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="Поиск товаров..." oninput="renderProducts()">
+      <select id="category" onchange="renderProducts()">
+        <option value="">Все категории</option>
+        <option>Одежда</option><option>Обувь</option><option>Аксессуары</option>
+      </select>
+      <select id="priceFilter" onchange="renderProducts()">
+        <option value="">Любая цена</option>
+        <option value="1000">До 1 000 ₴</option>
+        <option value="2000">До 2 000 ₴</option>
+        <option value="3000">До 3 000 ₴</option>
+      </select>
+      <select id="ratingFilter" onchange="renderProducts()">
+        <option value="0">Любой рейтинг</option>
+        <option value="4.5">От 4.5 ★</option>
+        <option value="4.8">От 4.8 ★</option>
+      </select>
+      <select id="sort" onchange="renderProducts()">
+        <option value="popular">Популярные</option>
+        <option value="low">Сначала дешевле</option>
+        <option value="high">Сначала дороже</option>
+        <option value="rating">По рейтингу</option>
+      </select>
+    </div>
+    <div class="product-grid" id="products"></div>
+  </section>
+</section>
+
+<section id="cartPage" class="page">
+  <div class="cart-layout">
+    <div>
+      <h1 class="cart-title">ТВОИ ПОКУПКИ</h1>
+      <p class="cart-subtitle" id="cartSubtitle">0 товаров в корзине</p>
+      <div class="cart-list" id="cartItems"></div>
+      <a class="back" href="#" onclick="showPage('shop');return false">← Вернуться к магазину</a>
+    </div>
+    <aside class="summary">
+      <h2>Твой заказ</h2>
+      <div class="summary-line"><span>Сумма товаров</span><strong id="subtotal">0 ₴</strong></div>
+      <div class="summary-line discount"><span>Скидка</span><strong id="discount">−0 ₴</strong></div>
+      <div class="summary-line"><span>Доставка</span><strong id="shipping">0 ₴</strong></div>
+      <div class="total"><span>Итого</span><strong id="total">0 ₴</strong></div>
+      <button class="red-btn" onclick="openCheckout()">Оформить заказ</button>
+      <form class="checkout-form" id="checkoutForm" hidden onsubmit="placeOrder(event)">
+        <label>Имя<input required name="name" placeholder="Твоё имя"></label>
+        <label>Телефон<input required name="phone" type="tel" placeholder="+380..." pattern="[+0-9 ()-]{9,20}"></label>
+        <label>Адрес доставки<input required name="address" placeholder="Город, улица, дом"></label>
+        <button class="red-btn" type="submit">Подтвердить заказ</button>
+      </form>
+      <p class="muted" style="margin-top:15px;line-height:1.6">Бесплатная доставка при заказе от 3 000 ₴.</p>
+    </aside>
+  </div>
+</section>
+
+<section id="favoritesPage" class="page">
+  <h2>ИЗБРАННОЕ</h2>
+  <p class="muted" style="margin:10px 0 25px">Товары, которые тебе понравились</p>
+  <div class="product-grid" id="favoriteProducts"></div>
+  <a class="back" href="#" onclick="showPage('shop');return false">← Вернуться к магазину</a>
+</section>
+</main>
+
+<footer id="footer">
+  <div class="logo">NOIR</div>
+  <span>Минимализм. Качество. Характер.</span>
+  <span>© 2026 NOIR STORE</span>
+</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const productsData = [
+ {id:1,name:"Oversized Black Hoodie",category:"Одежда",price:1890,old:2290,rating:4.9,reviews:128,image:"photo-1556821840-3a63f95609a7",tag:"SALE"},
+ {id:2,name:"Minimal Black T-Shirt",category:"Одежда",price:790,old:0,rating:4.7,reviews:86,image:"photo-1521572163474-6864f9cf17ab"},
+ {id:3,name:"Classic Black Sneakers",category:"Обувь",price:2490,old:2990,rating:4.8,reviews:94,image:"photo-1542291026-7eec264c27ff",tag:"SALE"},
+ {id:4,name:"Leather Shoulder Bag",category:"Аксессуары",price:1590,old:0,rating:4.6,reviews:52,image:"photo-1548036328-c9fa89d128fa"},
+ {id:5,name:"Dark Denim Jacket",category:"Одежда",price:2790,old:3290,rating:4.9,reviews:113,image:"photo-1551028719-00167b16eac5",tag:"SALE"},
+ {id:6,name:"Black Everyday Cap",category:"Аксессуары",price:590,old:0,rating:4.5,reviews:41,image:"photo-1588850561407-ed78c282e89b"},
+ {id:7,name:"Urban Crossbody Bag",category:"Аксессуары",price:1190,old:1490,rating:4.8,reviews:73,image:"photo-1553062407-98eeb64c6a62",tag:"SALE"},
+ {id:8,name:"Essential Black Pants",category:"Одежда",price:1690,old:0,rating:4.7,reviews:67,image:"photo-1473966968600-fa801b869a1a"},
+ {id:9,name:"Black Running Shoes",category:"Обувь",price:2190,old:0,rating:4.6,reviews:59,image:"photo-1549298916-b41d501d3772"},
+ {id:10,name:"Minimalist Watch",category:"Аксессуары",price:1990,old:2490,rating:4.9,reviews:144,image:"photo-1524592094714-0f0654e20314",tag:"SALE"},
+ {id:11,name:"Premium Sweatshirt",category:"Одежда",price:1490,old:0,rating:4.8,reviews:92,image:"photo-1578587018452-892bacefd3f2"},
+ {id:12,name:"Black Sunglasses",category:"Аксессуары",price:890,old:1090,rating:4.5,reviews:38,image:"photo-1511499767150-a48a237f0083",tag:"SALE"}
+].map(p=>({...p,image:`https://images.unsplash.com/${p.image}?auto=format&fit=crop&w=650&q=80`}));
+
+let cart=JSON.parse(localStorage.getItem("noirCart")||"{}");
+let favorites=JSON.parse(localStorage.getItem("noirFavorites")||"[]");
+let favoritesOnly=false;
+let toastTimer;
+
+const money=n=>Math.round(n).toLocaleString("uk-UA")+" ₴";
+const findProduct=id=>productsData.find(p=>p.id===Number(id));
+
+function save(){
+ localStorage.setItem("noirCart",JSON.stringify(cart));
+ localStorage.setItem("noirFavorites",JSON.stringify(favorites));
+ updateCounts();
+}
+function updateCounts(){
+ document.getElementById("cartCount").textContent=Object.values(cart).reduce((a,b)=>a+b,0);
+ document.getElementById("favCount").textContent=favorites.length;
+}
+function notify(message){
+ const el=document.getElementById("toast");
+ el.textContent=message;el.classList.add("show");
+ clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>el.classList.remove("show"),2200);
+}
+function showPage(page){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById(page+"Page").classList.add("active");
+ if(page==="cart")renderCart();
+ if(page==="favorites")renderFavorites();
+ if(page==="shop")renderProducts();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function categoryFilter(category){
+ document.getElementById("category").value=category;
+ showPage("shop");renderProducts();
+}
+function toggleFavorites(){
+ favoritesOnly=!favoritesOnly;
+ if(favoritesOnly)showPage("favorites");
+ else showPage("shop");
+}
+function productCard(p){
+ return `<article class="product">
+  <div class="product-image">
+   <img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.style.opacity='.2'">
+   ${p.old?'<span class="sale">SALE</span>':''}
+   <button class="heart ${favorites.includes(p.id)?"active":""}" aria-label="Добавить в избранное" onclick="toggleFavorite(${p.id})">${favorites.includes(p.id)?"♥":"♡"}</button>
+  </div>
+  <div class="product-info">
+   <div class="category">${p.category}</div>
+   <h3>${p.name}</h3>
+   <div class="rating"><span>★</span> ${p.rating} <span class="reviews">(${p.reviews} отзывов)</span></div>
+   <div class="prices"><span class="price">${money(p.price)}</span>${p.old?`<span class="old">${money(p.old)}</span>`:""}</div>
+   <button class="add" onclick="addToCart(${p.id})">Добавить в корзину</button>
+  </div>
+ </article>`;
+}
+function renderProducts(){
+ const search=document.getElementById("search").value.trim().toLowerCase();
+ const category=document.getElementById("category").value;
+ const maxPrice=Number(document.getElementById("priceFilter").value)||Infinity;
+ const minRating=Number(document.getElementById("ratingFilter").value)||0;
+ const sort=document.getElementById("sort").value;
+ let items=productsData.filter(p=>
+  p.name.toLowerCase().includes(search)&&
+  (!category||p.category===category)&&
+  p.price<=maxPrice&&p.rating>=minRating
+ );
+ if(sort==="low")items.sort((a,b)=>a.price-b.price);
+ if(sort==="high")items.sort((a,b)=>b.price-a.price);
+ if(sort==="rating")items.sort((a,b)=>b.rating-a.rating);
+ if(sort==="popular")items.sort((a,b)=>b.reviews-a.reviews);
+ document.getElementById("resultCount").textContent=`Найдено товаров: ${items.length}`;
+ document.getElementById("products").innerHTML=items.length?items.map(productCard).join(""):'<div class="empty">Ничего не найдено.<br>Попробуй изменить фильтры.</div>';
+}
+function renderFavorites(){
+ const items=productsData.filter(p=>favorites.includes(p.id));
+ document.getElementById("favoriteProducts").innerHTML=items.length?items.map(productCard).join(""):'<div class="empty">В избранном пока пусто.<br>Добавь понравившиеся товары сердечком.</div>';
+}
+function toggleFavorite(id){
+ if(favorites.includes(id))favorites=favorites.filter(x=>x!==id);
+ else favorites.push(id);
+ save();renderProducts();renderFavorites();
+}
+function addToCart(id){
+ cart[id]=(cart[id]||0)+1;save();notify("Товар добавлен в корзину");
+}
+function changeQuantity(id,delta){
+ cart[id]=(cart[id]||0)+delta;
+ if(cart[id]<=0)delete cart[id];
+ save();renderCart();
+}
+function removeFromCart(id){
+ delete cart[id];save();renderCart();notify("Товар удалён");
+}
+function renderCart(){
+ const entries=Object.entries(cart).filter(([id,q])=>findProduct(id)&&q>0);
+ const count=entries.reduce((sum,[id,q])=>sum+q,0);
+ const subtotal=entries.reduce((sum,[id,q])=>sum+findProduct(id).price*q,0);
+ const original=entries.reduce((sum,[id,q])=>sum+(findProduct(id).old||findProduct(id).price)*q,0);
+ const discount=original-subtotal;
+ const shipping=count===0||subtotal>=3000?0:99;
+ document.getElementById("cartSubtitle").textContent=`${count} ${count===1?"товар":count>=2&&count<=4?"товара":"товаров"} в корзине`;
+ document.getElementById("cartItems").innerHTML=entries.length?entries.map(([id,q])=>{
+  const p=findProduct(id);
+  return `<article class="cart-item">
+   <img src="${p.image}" alt="${p.name}">
+   <div>
+    <div class="item-top"><div><div class="category">${p.category}</div><h3>${p.name}</h3><div class="rating">★ ${p.rating} <span class="reviews">(${p.reviews} отзывов)</span></div></div>
+    <button class="remove" aria-label="Удалить товар" onclick="removeFromCart(${p.id})">×</button></div>
+    <div class="quantity-row">
+     <div class="quantity"><button onclick="changeQuantity(${p.id},-1)" aria-label="Уменьшить количество">−</button><span>${q}</span><button onclick="changeQuantity(${p.id},1)" aria-label="Увеличить количество">+</button></div>
+     <span class="line-total">${money(p.price*q)}</span>
+    </div>
+   </div>
+  </article>`;
+ }).join(""):'<div class="empty">Твоя корзина пока пуста.<br>Самое время найти что-нибудь интересное.</div>';
+ document.getElementById("subtotal").textContent=money(subtotal);
+ document.getElementById("discount").textContent="−"+money(discount);
+ document.getElementById("shipping").textContent=shipping===0?"Бесплатно":money(shipping);
+ document.getElementById("total").textContent=money(subtotal+shipping);
+ document.querySelector("#cartPage .summary>.red-btn").disabled=count===0;
+ document.querySelector("#cartPage .summary>.red-btn").style.opacity=count===0?".45":"1";
+ if(count===0)document.getElementById("checkoutForm").hidden=true;
+}
+function openCheckout(){
+ if(!Object.values(cart).some(q=>q>0)){notify("Сначала добавь товары в корзину");return;}
+ const form=document.getElementById("checkoutForm");
+ form.hidden=!form.hidden;
+ if(!form.hidden)form.scrollIntoView({behavior:"smooth",block:"center"});
+}
+function placeOrder(event){
+ event.preventDefault();
+ if(!Object.values(cart).some(q=>q>0)){notify("Корзина пуста");return;}
+ const data=new FormData(event.target);
+ const name=String(data.get("name")).trim();
+ const phone=String(data.get("phone")).trim();
+ const address=String(data.get("address")).trim();
+ if(!name||!phone||!address){notify("Заполни все поля");return;}
+ const orderNumber="NR"+Date.now().toString().slice(-7);
+ alert(`Спасибо, ${name}!\nЗаказ ${orderNumber} оформлен в демоверсии.\nТелефон: ${phone}\nАдрес: ${address}\n\nЭто демонстрационный сайт: заказ не отправлен продавцу.`);
+ cart={};save();event.target.reset();event.target.hidden=true;renderCart();
+}
+updateCounts();
+renderProducts();
+renderCart();
+</script>
+</body>
+</html>
