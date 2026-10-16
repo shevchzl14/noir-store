@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOIR</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #0a0a0a;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  height: 70px;
+  padding: 0 5%;
+  border-bottom: 1px solid #292929;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: #0a0a0a;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 25px;
+  font-weight: bold;
+  letter-spacing: 5px;
+}
+
+nav {
+  display: flex;
+  gap: 30px;
+}
+
+nav a {
+  color: #aaa;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+nav a:hover {
+  color: white;
+}
+
+.actions {
+  display: flex;
+  gap: 15px;
+}
+
+.icon {
+  position: relative;
+  border: 0;
+  background: none;
+  color: white;
+  font-size: 21px;
+  cursor: pointer;
+}
+
+.count {
+  position: absolute;
+  top: -7px;
+  right: -8px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: white;
+  color: black;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+main {
+  max-width: 1400px;
+  margin: auto;
+  padding: 0 5% 70px;
+}
+
+.hero {
+  padding: 70px 0 50px;
+}
+
+.hero small {
+  color: #888;
+  letter-spacing: 3px;
+}
+
+h1 {
+  font-size: clamp(40px, 6vw, 70px);
+  line-height: 1;
+  margin: 18px 0;
+}
+
+.hero p {
+  color: #999;
+  max-width: 500px;
+  line-height: 1.7;
+}
+
+.toolbar {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
+
+.search {
+  flex: 1;
+  min-width: 220px;
+}
+
+input,
+select {
+  background: #151515;
+  border: 1px solid #303030;
+  color: white;
+  padding: 12px;
+  outline: none;
+}
+
+.search input {
+  width: 100%;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.card {
+  background: #151515;
+  border: 1px solid #292929;
+}
+
+.photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #222;
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heart {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: 0;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  background: #111c;
+  color: white;
+  font-size: 19px;
+  cursor: pointer;
+}
+
+.heart.active {
+  background: white;
+  color: black;
+}
+
+.tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 6px 8px;
+  background: white;
+  color: black;
+  font-size: 9px;
+}
+
+.details {
+  padding: 15px;
+}
+
+.category {
+  color: #777;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.name {
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.rating {
+  color: #ccc;
+  font-size: 12px;
+}
+
+.rating span {
+  color: #777;
+}
+
+.price {
+  margin: 13px 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.current {
+  font-weight: bold;
+}
+
+.old {
+  color: #666;
+  text-decoration: line-through;
+  font-size: 12px;
+}
+
+.add {
+  width: 100%;
+  border: 0;
+  background: white;
+  color: black;
+  padding: 12px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.add:hover {
+  background: #ccc;
+}
+
+/* КОРЗИНА */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: #000b;
+  z-index: 20;
+  display: none;
+}
+
+.overlay.active {
+  display: block;
+}
+
+.cart {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: min(430px, 100%);
+  height: 100%;
+  background: #111;
+  border-left: 1px solid #333;
+  z-index: 30;
+  padding: 25px;
+  transform: translateX(100%);
+  transition: .3s;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart.active {
+  transform: translateX(0);
+}
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #333;
+  padding-bottom: 18px;
+}
+
+.cart-header h2 {
+  margin: 0;
+}
+
+.close {
+  border: 0;
+  background: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.cart-items {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 70px 1fr auto;
+  gap: 12px;
+  padding: 15px 0;
+  border-bottom: 1px solid #292929;
+}
+
+.cart-item img {
+  width: 70px;
+  height: 80px;
+  object-fit: cover;
+}
+
+.item-name {
+  font-size: 13px;
+  margin-bottom: 7px;
+}
+
+.item-price {
+  color: #aaa;
+  font-size: 12px;
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 9px;
+}
+
+.quantity button {
+  width: 25px;
+  height: 25px;
+  background: #222;
+  border: 1px solid #444;
+  color: white;
+  cursor: pointer;
+}
+
+.remove {
+  background: none;
+  border: 0;
+  color: #888;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.cart-bottom {
+  border-top: 1px solid #333;
+  padding-top: 18px;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.checkout {
+  width: 100%;
+  padding: 14px;
+  border: 0;
+  background: white;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.empty {
+  text-align: center;
+  color: #777;
+  padding: 50px 10px;
+}
+
+/* МОБИЛЬНАЯ ВЕРСИЯ */
+
+@media (max-width: 800px) {
+
+  header {
+    padding: 0 4%;
+  }
+
+  nav {
+    display: none;
+  }
+
+  main {
+    padding: 0 4% 50px;
+  }
+
+  .hero {
+    padding: 45px 0 35px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .filters {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  select {
+    width: 100%;
+  }
+
+  .details {
+    padding: 10px;
+  }
+
+  .name {
+    font-size: 13px;
+  }
+
+  .add {
+    font-size: 10px;
+    padding: 10px 5px;
+  }
+}
+
+@media (max-width: 380px) {
+
+  .grid {
+    gap: 7px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+  <div class="logo">NOIR</div>
+
+  <nav>
+    <a href="#catalog">Каталог</a>
+    <a href="#catalog">Одежда</a>
+    <a href="#catalog">Аксессуары</a>
+  </nav>
+
+  <div class="actions">
+
+    <button class="icon" onclick="openCart()">
+      🛒
+      <span class="count" id="cartCount">0</span>
+    </button>
+
+  </div>
+
+</header>
+
+<main>
+
+<section class="hero">
+
+  <small>MINIMALISM IN DETAILS</small>
+
+  <h1>
+    Меньше шума.<br>
+    Больше стиля.
+  </h1>
+
+  <p>
+    Подборка вещей с чистыми линиями,
+    спокойными оттенками и продуманным дизайном.
+  </p>
+
+</section>
+
+<section id="catalog">
+
+<div class="toolbar">
+
+  <div class="search">
+    <input
+      type="search"
+      id="search"
+      placeholder="Поиск товаров..."
+      oninput="renderProducts()"
+    >
+  </div>
+
+  <div class="filters">
+
+    <select id="category" onchange="renderProducts()">
+      <option value="all">Все категории</option>
+      <option value="Одежда">Одежда</option>
+      <option value="Обувь">Обувь</option>
+      <option value="Аксессуары">Аксессуары</option>
+    </select>
+
+    <select id="sort" onchange="renderProducts()">
+      <option value="popular">Популярные</option>
+      <option value="cheap">Сначала дешевле</option>
+      <option value="expensive">Сначала дороже</option>
+      <option value="rating">По рейтингу</option>
+    </select>
+
+  </div>
+
+</div>
+
+<div class="grid" id="products"></div>
+
+</section>
+
+</main>
+
+<div
+  class="overlay"
+  id="overlay"
+  onclick="closeCart()">
+</div>
+
+<aside class="cart" id="cart">
+
+  <div class="cart-header">
+
+    <h2>Корзина</h2>
+
+    <button
+      class="close"
+      onclick="closeCart()">
+      ×
+    </button>
+
+  </div>
+
+  <div
+    class="cart-items"
+    id="cartItems">
+  </div>
+
+  <div
+    class="cart-bottom"
+    id="cartBottom">
+  </div>
+
+</aside>
+
+<script>
+
+const products = [
+
+  {
+    id: 1,
+    name: "Oversized wool coat",
+    category: "Одежда",
+    price: 6890,
+    oldPrice: 8290,
+    rating: 4.9,
+    reviews: 124,
+    tag: "SALE",
+    image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&w=900&q=85"
+  },
+
+  {
+    id: 2,
+    name: "Minimal leather bag",
+    category: "Аксессуары",
+    price: 4290,
+    rating: 4.8,
+    reviews: 86,
+    tag: "BESTSELLER",
+    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=85"
+  },
+
+  {
+    id: 3,
+    name: "Classic black sneakers",
+    category: "Обувь",
+    price: 3590,
+    oldPrice: 4190,
+    rating: 4.7,
+    reviews: 73,
+    tag: "SALE",
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=85"
+  },
+
+  {
+    id: 4,
+    name: "Everyday black tee",
+    category: "Одежда",
+    price: 1190,
+    rating: 4.6,
+    reviews: 58,
+    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=85"
+  },
+
+  {
+    id: 5,
+    name: "Structured shoulder bag",
+    category: "Аксессуары",
+    price: 5190,
+    rating: 4.9,
+    reviews: 42,
+    tag: "NEW",
+    image: "https://images.unsplash.com/photo-1590871898411-7d0e4e4a1f7e?auto=format&fit=crop&w=900&q=85"
+  },
+
+  {
+    id: 6,
+    name: "Urban leather boots",
+    category: "Обувь",
+    price: 7490,
+    oldPrice: 8990,
+    rating: 4.8,
+    reviews: 67,
+    tag: "SALE",
+    image: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&w=900&q=85"
+  },
+
+  {
+    id: 7,
+    name: "Premium dark hoodie",
+    category: "Одежда",
+    price: 2490,
+    rating: 4.5,
+    reviews: 91,
+    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=85"
+  },
+
+  {
+    id: 8,
+    name: "Steel minimal watch",
+    category: "Аксессуары",
+    price: 5990,
+    rating: 4.7,
+    reviews: 39,
+    tag: "NEW",
+    image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=900&q=85"
+  }
+
+];
+
+/* КОРЗИНА */
+
+let cart = {};
+
+function money(number) {
+  return number.toLocaleString("uk-UA") + " ₴";
+}
+
+function renderProducts() {
+
+  const search =
+    document
+      .getElementById("search")
+      .value
+      .toLowerCase();
+
+  const category =
+    document.getElementById("category").value;
+
+  const sort =
+    document.getElementById("sort").value;
+
+  let list = products.filter(product => {
+
+    const matchesSearch =
+      product.name
+        .toLowerCase()
+        .includes(search);
+
+    const matchesCategory =
+      category === "all" ||
+      product.category === category;
+
+    return matchesSearch && matchesCategory;
+
+  });
+
+  if (sort === "cheap") {
+    list.sort((a,b) => a.price - b.price);
+  }
+
+  if (sort === "expensive") {
+    list.sort((a,b) => b.price - a.price);
+  }
+
+  if (sort === "rating") {
+    list.sort((a,b) => b.rating - a.rating);
+  }
+
+  const container =
+    document.getElementById("products");
+
+  container.innerHTML = "";
+
+  list.forEach(product => {
+
+    const card =
+      document.createElement("article");
+
+    card.className = "card";
+
+    card.innerHTML = `
+
+      <div class="photo">
+
+        <img
+          src="${product.image}"
+          alt="${product.name}"
+        >
+
+        ${
+          product.tag
+          ? `<span class="tag">${product.tag}</span>`
+          : ""
+        }
+
+      </div>
+
+      <div class="details">
+
+        <div class="category">
+          ${product.category}
+        </div>
+
+        <div class="name">
+          ${product.name}
+        </div>
+
+        <div class="rating">
+          ★ ${product.rating}
+          <span>(${product.reviews} отзывов)</span>
+        </div>
+
+        <div class="price">
+
+          <span class="current">
+            ${money(product.price)}
+          </span>
+
+          ${
+            product.oldPrice
+            ? `
+              <span class="old">
+                ${money(product.oldPrice)}
+              </span>
+            `
+            : ""
+          }
+
+        </div>
+
+        <button
+          class="add"
+          onclick="addToCart(${product.id})"
+        >
+          ДОБАВИТЬ В КОРЗИНУ
+        </button>
+
+      </div>
+
+    `;
+
+    container.appendChild(card);
+
+  });
+
+}
+
+function addToCart(id) {
+
+  if (!cart[id]) {
+    cart[id] = 0;
+  }
+
+  cart[id]++;
+
+  updateCartCount();
+
+  renderCart();
+
+}
+
+function updateCartCount() {
+
+  const total =
+    Object.values(cart)
+      .reduce((sum, quantity) => sum + quantity, 0);
+
+  document.getElementById("cartCount").textContent = total;
+
+}
+
+function openCart() {
+
+  document
+    .getElementById("cart")
+    .classList.add("active");
+
+  document
+    .getElementById("overlay")
+    .classList.add("active");
+
+  renderCart();
+
+}
+
+function closeCart() {
+
+  document
+    .getElementById("cart")
+    .classList.remove("active");
+
+  document
+    .getElementById("overlay")
+    .classList.remove("active");
+
+}
+
+function changeQuantity(id, amount) {
+
+  cart[id] += amount;
+
+  if (cart[id] <= 0) {
+    delete cart[id];
+  }
+
+  updateCartCount();
+
+  renderCart();
+
+}
+
+function removeFromCart(id) {
+
+  delete cart[id];
+
+  updateCartCount();
+
+  renderCart();
+
+}
+
+function renderCart() {
+
+  const container =
+    document.getElementById("cartItems");
+
+  const bottom =
+    document.getElementById("cartBottom");
+
+  const ids =
+    Object.keys(cart);
+
+  if (ids.length === 0) {
+
+    container.innerHTML = `
+      <div class="empty">
+        Корзина пока пуста.
+      </div>
+    `;
+
+    bottom.innerHTML = "";
+
+    return;
+  }
+
+  let total = 0;
+
+  container.innerHTML = "";
+
+  ids.forEach(id => {
+
+    const product =
+      products.find(
+        product => product.id == id
+      );
+
+    const quantity =
+      cart[id];
+
+    total +=
+      product.price * quantity;
+
+    const item =
+      document.createElement("div");
+
+    item.className = "cart-item";
+
+    item.innerHTML = `
+
+      <img
+        src="${product.image}"
+        alt="${product.name}"
+      >
+
+      <div>
+
+        <div class="item-name">
+          ${product.name}
+        </div>
+
+        <div class="item-price">
+          ${money(product.price)}
+        </div>
+
+        <div class="quantity">
+
+          <button
+            onclick="changeQuantity(${product.id}, -1)"
+          >
+            −
+          </button>
+
+          <span>
+            ${quantity}
+          </span>
+
+          <button
+            onclick="changeQuantity(${product.id}, 1)"
+          >
+            +
+          </button>
+
+        </div>
+
+      </div>
+
+      <button
+        class="remove"
+        onclick="removeFromCart(${product.id})"
+      >
+        ×
+      </button>
+
+    `;
+
+    container.appendChild(item);
+
+  });
+
+  bottom.innerHTML = `
+
+    <div class="total">
+
+      <span>
+        Итого
+      </span>
+
+      <strong>
+        ${money(total)}
+      </strong>
+
+    </div>
+
+    <button
+      class="checkout"
+      onclick="checkout()"
+    >
+      ОФОРМИТЬ ЗАКАЗ
+    </button>
+
+  `;
+
+}
+
+function checkout() {
+
+  alert(
+    "Это демонстрационная версия сайта. Оформление заказа пока не подключено."
+  );
+
+}
+
+renderProducts();
+
+updateCartCount();
+
+</script>
+
+</body>
+</html> 
+
+
