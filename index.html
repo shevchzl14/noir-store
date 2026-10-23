@@ -883,33 +883,99 @@ main {
 
 <div class="layout">
 
-    <aside class="sidebar">
+    <aside class=«sidebar»>
 
-        <div class="sidebar-title">Категории</div>
+    <div class=«sidebar-title»>МЕНЮ</div>
 
-        <a href="all-products.html" class="category active">
-    Все товары
-</a>
+    <a href=«index.html» class=«category active»>
+        Главная
+    </a>
 
-        <button class="category" data-category="clothes">
-            Одежда
+    <a href=«all-products.html» class=«category»>
+        Все товары
+    </a>
+
+    <a href=«all-products.html» class=«category»>
+        Одежда
+    </a>
+
+    <a href=«all-products.html» class=«category»>
+        Обувь
+    </a>
+
+    <a href=«all-products.html» class=«category»>
+        Аксессуары
+    </a>
+
+    <a href=«all-products.html» class=«category»>
+        Сумки
+    </a>
+
+
+    <div class=«filter-section»>
+        <div class=«filter-title»>ЦЕНА</div>
+
+        <label>
+            Минимальная цена
+            <input type=«number» id=«minPrice» placeholder=«0»>
+        </label>
+
+        <label>
+            Максимальная цена
+            <input type=«number» id=«maxPrice» placeholder=«100000»>
+        </label>
+
+        <button class=«filter-button» onclick=«applyFilters()»>
+            ПРИМЕНИТЬ
         </button>
-
-        <button class="category" data-category="shoes">
-            Обувь
-        </button>
-
-        <button class="category" data-category="accessories">
-            Аксессуары
-        </button>
-
-        <button class="category" data-category="bags">
-            Сумки
-        </button>
-
-    </aside>
+    </div>
 
 
+    <div class=«filter-section»>
+        <div class=«filter-title»>СТРАНА-ПРОИЗВОДИТЕЛЬ</div>
+
+        <label class=«country-option»>
+            <input type=«checkbox» value=«Китай» class=«country-filter»>
+            Китай
+        </label>
+
+        <label class=«country-option»>
+            <input type=«checkbox» value=«США» class=«country-filter»>
+            США
+        </label>
+
+        <label class=«country-option»>
+            <input type=«checkbox» value=«Франция» class=«country-filter»>
+            Франция
+        </label>
+
+        <label class=«country-option»>
+            <input type=«checkbox» value=«Германия» class=«country-filter»>
+            Германия
+        </label>
+
+        <label class=«country-option»>
+            <input type=«checkbox» value=«Украина» class=«country-filter»>
+            Украина
+        </label>
+
+        <label class=«country-option»>
+            <input type=«checkbox» value=«Польша» class=«country-filter»>
+            Польша
+        </label>
+
+        <label class=«country-option»>
+            <input type=«checkbox» value=«Италия» class=«country-filter»>
+            Италия
+        </label>
+
+        <label class=«country-option»>
+            <input type=«checkbox» value=«Великобритания» class=«country-filter»>
+            Великобритания
+        </label>
+    </div>
+
+</aside>
     <main>
 
         <div class="container">
